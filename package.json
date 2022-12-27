@@ -9,12 +9,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
     "codemirror": "^5.65.10",
     "core-js": "^3.8.3",
     "firebase": "^9.15.0",
     "highlight.js": "^11.7.0",
     "marked": "^4.2.4",
-    "vue": "^3.2.45"
+    "tw-elements": "^1.0.0-alpha13",
+    "vue": "^3.2.45",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",

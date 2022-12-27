@@ -296,61 +296,6 @@
         overflow: hidden;
         padding-bottom: 0;
 
-        .markdown-editor { // simple版编辑器区域
-            flex: 1;
-            height: 100%;
-            position: relative;
-            margin: 0 !important;
-            overflow: hidden;
-            overflow-y: scroll;
-            display: flex;
-            justify-content: space-between;
-            background: #2d2d2d;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-
-            .index {
-                background: #272727;
-                min-height: 100%;
-                width: 36px;
-                line-height: @line-height;
-                padding: 12px 0;
-
-                li {
-                    background: #272727;
-                    color: #ccc;
-                    font-size: 14px;
-                    text-align: center;
-                    font-family: Consolas;
-                }
-            }
-
-            textarea {
-                width: 100%;
-                min-height: 100%;
-                outline: none;
-                border: 0;
-                background: #2d2d2d;
-                line-height: @line-height;
-                caret-color: #ccc;
-                color: #669acc;
-                font-size: 14px;
-                font-family: Consolas;
-                resize: none;
-                padding: 12px 8px;
-                overflow: hidden;
-                white-space: nowrap;
-                overflow-x: auto;
-
-                &::selection {
-                    background: #999;
-                    color: #0084ff;
-                }
-            }
-        }
-
         .codemirror {
             flex: 1;
             height: 100%;

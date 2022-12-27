@@ -89,7 +89,8 @@ export default defineComponent({
         // direction:"rtl"
       });
       // 监听编辑器的change事件
-      
+      console.log(window.screen.height);
+      editor.setSize('auto',(window.innerHeight*0.95)+'px')
       editor.on("change", () => {
         // 触发v-model的双向绑定
         
@@ -104,6 +105,10 @@ export default defineComponent({
       if (defaultValue.value) {
         editor.setValue(defaultValue.value);
       }
+      window.addEventListener('resize',()=>{
+        //detect the browser resize to the editor
+        editor.setSize('auto',(window.innerHeight*0.95)+'px')
+      })
     });
     onBeforeUnmount(() => {
       if (null !== editor) {
