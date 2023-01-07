@@ -7,8 +7,9 @@
 </template>
 
 <script>
-import { defineComponent, onBeforeUnmount, onMounted, ref, toRefs, watch } from "vue";
-
+import { onBeforeUnmount, onMounted, ref, toRefs, watch } from "vue";
+import {readUserData} from '../FirebaseFunc/firebase.js'
+import {useStore} from 'vuex'
 
 import CodeMirror from "codemirror";
 import "codemirror/lib/codemirror.css";
@@ -43,7 +44,7 @@ import "codemirror/addon/display/placeholder.js";
 
 import "codemirror/addon/selection/active-line.js"; //光标行背景高亮，配置里面也需要styleActiveLine设置为true
 
-export default defineComponent({
+export default ({
   props: {
     modelValue: String,
     defaultValue: String,
@@ -53,9 +54,12 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    const { modelValue, defaultValue, readOnly,className } = toRefs(props);
+    const { modelValue, readOnly,className } = toRefs(props);
     const codeEditor = ref();
     let editor;
+    
+    const store = useStore()
+    
     watch(modelValue, () => {
         console.log('codeEditor :', codeEditor);
       if (null != editor && modelValue.value && modelValue.value !== editor.getValue()) {
@@ -69,7 +73,17 @@ export default defineComponent({
         editor.setOption("readOnly", readOnly.value);
       }
     });
-    onMounted(() => {
+    watch(()=>store.state.serverDataUpdated,()=>{
+      console.log('watch server data ',store.state.serverDataUpdated)
+      if(editor && store.state.serverDataUpdated){
+        editor.setValue(store.state.serverDataUpdated);
+      }
+    })
+    // const user = await getCurrentUser();
+    readUserData(store.state.userid,'a1');
+    console.log("read data");
+
+    onMounted(async() => {
       editor = CodeMirror.fromTextArea(codeEditor.value, {
         value: modelValue.value,
         mime: "text/javascript",
@@ -102,13 +116,24 @@ export default defineComponent({
         
         // editor.replaceSelection('test_string')
       })
-      if (defaultValue.value) {
-        editor.setValue(defaultValue.value);
-      }
+      console.log("read data in onmounted");
+      // if (data){
+      //   editor.setValue(data);
+      // }else{
+      //   editor.setValue(defaultValue.value);
+      // }
+      
+
+
       window.addEventListener('resize',()=>{
         //detect the browser resize to the editor
-        editor.setSize('auto',(window.innerHeight*0.95)+'px')
+        if(editor){
+          editor.setSize('auto',(window.innerHeight*0.95)+'px')
+        }
+        
       })
+
+
     });
     onBeforeUnmount(() => {
       if (null !== editor) {

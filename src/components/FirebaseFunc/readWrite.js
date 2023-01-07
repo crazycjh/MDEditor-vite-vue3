@@ -1,9 +1,11 @@
 import { getDatabase,ref as refFirebase, onValue,set } from "firebase/database";
+export default{
 
-const database = getDatabase();
+}
+        const database = getDatabase();
         console.log('database',database);
         const readFirebase = ()=>{
-          const starCountRef = refFirebase(database, user.uid);
+          const starCountRef = refFirebase(database, 'user'+user.uid);
           onValue(starCountRef, (snapshot) => {
             const data = snapshot.val();
             message.value = data;

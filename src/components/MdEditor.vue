@@ -18,19 +18,21 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted,watch } from "vue";
+import { useStore } from 'vuex';
 import VueCodemirror from "./codemirror/vueCodemirror.vue"; // @ is an alias to /src
+import { getCurrentUser, writeUserData } from './FirebaseFunc/firebase'
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {
-  getDatabase,
-  ref as refFirebase,
-  onValue,
-  set,
-} from "firebase/database";
+// import { initializeApp } from "firebase/app";
+// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+// import {
+//   getDatabase,
+//   ref as refFirebase,
+//   onValue,
+//   set,
+// } from "firebase/database";
 
 export default {
   components: {
@@ -40,19 +42,25 @@ export default {
     const codeRef = ref("");
     const readOnly = ref(false);
     const message = ref("");
-    let app = "";
+    // let app = "";
     const mdSize = ref("");
-    let user;
-    const onChangeCodeContent = () => {
-      codeRef.value = `const test='你好世界';`;
-    };
-    const onSetReadOnly = () => {
-      readOnly.value = !readOnly.value;
-      console.log("xxx", readOnly.value);
-    };
-    const markedCompile = computed(() => {
-      // console.log(codeRef.value);
-      marked.setOptions({
+
+    const store = useStore();
+    watch(()=>store.state.saveFlag,async()=>{
+      //add the spin animation
+      const user = await getCurrentUser();
+      await writeUserData(user.uid,{fileName:store.state.choseFileName,data:codeRef.value})
+      
+      
+    })
+
+    // const onSetReadOnly = () => {
+    //   readOnly.value = !readOnly.value;
+    //   console.log("xxx", readOnly.value);
+    // };
+    
+    //set the marked editor
+    marked.setOptions({
         renderer: new marked.Renderer(),
         highlight: function (code) {
           console.log("code code ", code);
@@ -68,11 +76,15 @@ export default {
         smartypants: false,
         xhtml: false,
       });
+    
+      //compile the text from marked editor 
+      const markedCompile = computed(() => { 
       const htmlcode = marked.parse(codeRef.value);
-      console.log(htmlcode);
       return htmlcode;
-      // console.log();
+    
     });
+
+
     onMounted(() => {
       //resize preview 
       window.addEventListener('resize',()=>{
@@ -83,8 +95,8 @@ export default {
     return {
       codeRef,
       readOnly,
-      onChangeCodeContent,
-      onSetReadOnly,
+      // onChangeCodeContent,
+      // onSetReadOnly,
       markedCompile,
       message,
       mdSize,

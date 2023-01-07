@@ -5,20 +5,27 @@
       <div class="flex items-center">
         <div class="shrink-0">
           <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-full w-10" alt="Avatar">
+          
         </div>
         <div class="grow ml-3">
-          <p class="text-sm font-semibold text-blue-600">Jason McCoel</p>
+          <p class="text-sm font-semibold text-blue-600">UserName</p>
+          <div class="flex">
+            <font-awesome-icon @click="logoutHandler" icon="fa-solid fa-arrow-right-from-bracket" />
+            <p @click="logoutHandler" class="text-xs font-semibold text-black-400 "> logout</p>
+            <font-awesome-icon icon="fa-solid fa-file" class="ml-3" @click="saveHandler"></font-awesome-icon>
+            <p class="text-xs font-semibold text-black-400 ml-0.5" @click="saveHandler">save</p>
+          </div>
+          
         </div>
       </div>
     </a>
   </div>
   <ul class="relative px-1">
-    <li class="relative">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="primary">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path fill="currentColor" d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path>
-        </svg>
-        <span>Non-collapsible link</span>
+    <li class="h-3"></li>
+    <!-- <li class="relative"> -->
+    <li v-for="item in Object.keys(store.state.serverPostListUpdated)" :key="item" class="relative h1">
+      <a @click="fileHandler(item)" :class="{'bg-slate-300':store.state.serverPostListUpdated[item]}" class="flex items-center text-sm  px-6  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap  " href="#!" data-mdb-ripple="true" data-mdb-ripple-color="primary">
+        <span>{{ item }}</span>
       </a>
     </li>
     <li class="relative" id="sidenavSecEx2">
@@ -42,9 +49,11 @@
     </li>
     <li class="relative" id="sidenavSecEx3">
       <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavSecEx3" aria-expanded="false" aria-controls="collapseSidenavSecEx3">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path fill="currentColor" d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z"></path>
-        </svg>
+        <!-- <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"> -->
+        <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="pr-2.5" >
+          
+        </font-awesome-icon>
+          <!-- </svg> -->
         <span>Collapsible item 2</span>
         <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
           <path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path>
@@ -89,7 +98,8 @@
         </li>
       </ul>
     </li>
-    <li class="relative" id="sidenavXxEx3">
+    
+    <!-- <li class="relative" id="sidenavXxEx3">
       <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavXxEx3" aria-expanded="false" aria-controls="collapseSidenavXxEx3">
         <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path fill="currentColor" d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"></path>
@@ -107,7 +117,7 @@
           <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 8</a>
         </li>
       </ul>
-    </li>
+    </li> -->
   </ul>
  
 </div>
@@ -118,8 +128,48 @@
 
 <script>
 
+import { logout,readUserPostsList } from "../FirebaseFunc/firebase";
+
+// import { useRouter } from "vue-router";
+import {useStore} from 'vuex'
+export default{
+
+  setup(){
+    // const router = useRouter();
+    const store = useStore();
+    const logoutHandler=async ()=>{
+      await logout();
+    }
+    const saveHandler = ()=>{
+      console.log(store.state.saveFlag);
+      store.commit("setSaveFlag",true);
+    }
+    const fileHandler = (item)=>{
+      store.commit('setChoseFile',item);
+      console.log(store.state.serverPostListUpdated[item]);
+    }
+
+    
+
+    //傳入keyid filename
+    // const chooseFile =()=> {
+    //   readUserData()
+    //   store.commit('setChoseFileName','a1')
+      
+    // }
+    if(store.state.loggedIn){
+      readUserPostsList(store.state.userid);
+    }
+    
+
+    return {logoutHandler,saveHandler,store,fileHandler}
+  }
+}
 </script>
 
 <style scoped>
+.clickani{
+  background-color: burlywood;
+}
 
 </style>
