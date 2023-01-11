@@ -1,175 +1,239 @@
 <template>
-<div class="w-2/12 h-full shadow-md bg-white overflow-hidden" id="sidenavSecExample">
-  <div class="pt-4 pb-2 px-6">
-    <a href="#!">
-      <div class="flex items-center">
-        <div class="shrink-0">
-          <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-full w-10" alt="Avatar">
-          
-        </div>
-        <div class="grow ml-3">
-          <p class="text-sm font-semibold text-blue-600">UserName</p>
-          <div class="flex">
-            <font-awesome-icon @click="logoutHandler" icon="fa-solid fa-arrow-right-from-bracket" />
-            <p @click="logoutHandler" class="text-xs font-semibold text-black-400 "> logout</p>
-            <font-awesome-icon icon="fa-solid fa-file" class="ml-3" @click="saveHandler"></font-awesome-icon>
-            <p class="text-xs font-semibold text-black-400 ml-0.5" @click="saveHandler">save</p>
+  <div
+    class="w-2/12 h-full shadow-md bg-white overflow-scroll sidenavSize"
+    id="sidenavSecExample"
+  >
+    <new-file-modal :visibleTrigger="visibleTrigger" />
+    <rename-file-modal :itemName="itemName" :visibleTrigger="renameVisibleTrigger"/>
+    <div class="pt-4 pb-2 px-6">
+      <a href="#!">
+        <div class="flex items-center">
+          <div class="shrink-0">
+            <img
+              src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp"
+              class="rounded-full w-10"
+              alt="Avatar"
+            />
           </div>
-          
+          <div class="grow ml-3">
+            <p class="text-sm font-semibold text-blue-600">{{}}</p>
+            <div class="flex">
+              <font-awesome-icon
+                @click="logoutHandler"
+                icon="fa-solid fa-arrow-right-from-bracket"
+              />
+              <p
+                @click="logoutHandler"
+                class="text-xs font-semibold text-black-400"
+              >
+                logout
+              </p>
+              <font-awesome-icon
+                icon="fa-solid fa-file"
+                class="ml-3"
+                @click="saveHandler"
+              ></font-awesome-icon>
+              <p
+                class="text-xs font-semibold text-black-400 ml-0.5"
+                @click="saveHandler"
+              >
+                save
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
+    <ul class="relative px-1">
+      <li class="h-3"></li>
+      <!-- <li class="relative"> -->
+      <li
+        v-for="item in Object.keys(store.state.serverPostListUpdated)"
+        :key="item"
+        class="relative h1"
+      >
+        <div class="flex">
+          <a
+            @click="fileHandler(item)"
+            :class="{ 'bg-slate-300': store.state.serverPostListUpdated[item] }"
+            class="flex items-center text-sm px-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap w-11/12"
+            href="#!"
+          >
+            <div class="overflow-hidden mr-1">
+              <font-awesome-icon
+                icon="fa-solid fa-file"
+                class="mr-3"
+                @click="saveHandler"
+              ></font-awesome-icon
+              ><span class="overflow-hidden">{{ item }}</span>
+            </div>
+          </a>
+          <div
+            @click="itemMenu(item)"
+            class="float-right w-1/12 cursor-pointer"
+          >
+            <div class="flex justify-center">
+              <div>
+                <div class="dropdown relative">
+                  <font-awesome-icon
+                    icon="fa-solid fa-bars"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  ></font-awesome-icon>
+                  <ul
+                    class="dropdown-menu min-w-max absolute hidden bg-white text-base z-50 float-left py-2 list-none text-left rounded-lg shadow-lg mt-1 hidden m-0 bg-clip-padding border-none"
+                    aria-labelledby="dropdownMenuButton1"
+                  >
+                    <li>
+                      <a
+                        class="dropdown-item text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-700 hover:bg-gray-100"
+                        @click="deleteFile(item)"
+                        >Delete</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-700 hover:bg-gray-100"
+                        @click="updateFile(item)"
+                        >Rename</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a
+          @click="newOneHandler()"
+          class="flex items-center text-sm px-6 pt-1 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap transition duration-150 cursor-pointer ease-in-out"
+        >
+          <font-awesome-icon icon="fa-solid fa-plus fa-2xl " /><span
+            class="pl-1"
+          >
+            Create new file</span
+          >
+        </a>
+      </li>
+      <!-- <li>
+        <button type="button" class="px-6
+          py-2.5
+          bg-blue-600
+          text-white
+          font-medium
+          text-xs
+          leading-tight
+          uppercase
+          rounded
+          shadow-md
+          hover:bg-blue-700 hover:shadow-lg
+          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+          active:bg-blue-800 active:shadow-lg
+          transition
+          duration-150
+          ease-in-out" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Launch demo modal
+        </button>
+      </li> -->
+    </ul>
   </div>
-  <ul class="relative px-1">
-    <li class="h-3"></li>
-    <!-- <li class="relative"> -->
-    <li v-for="item in Object.keys(store.state.serverPostListUpdated)" :key="item" class="relative h1">
-      <a @click="fileHandler(item)" :class="{'bg-slate-300':store.state.serverPostListUpdated[item]}" class="flex items-center text-sm  px-6  overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap  " href="#!" data-mdb-ripple="true" data-mdb-ripple-color="primary">
-        <span>{{ item }}</span>
-      </a>
-    </li>
-    <li class="relative" id="sidenavSecEx2">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavSecEx2" aria-expanded="false" aria-controls="collapseSidenavSecEx2">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
-          <path fill="currentColor" d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"></path>
-        </svg>
-        <span>Collapsible item 1</span>
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-          <path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path>
-        </svg>
-      </a>
-      <ul class="relative accordion-collapse collapse" id="collapseSidenavSecEx2" aria-labelledby="sidenavSecEx2" data-bs-parent="#sidenavSecExample">
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 1</a>
-        </li>
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 2</a>
-        </li>
-      </ul>
-    </li>
-    <li class="relative" id="sidenavSecEx3">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavSecEx3" aria-expanded="false" aria-controls="collapseSidenavSecEx3">
-        <!-- <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"> -->
-        <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="pr-2.5" >
-          
-        </font-awesome-icon>
-          <!-- </svg> -->
-        <span>Collapsible item 2</span>
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-          <path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path>
-        </svg>
-      </a>
-      <ul class="relative accordion-collapse collapse" id="collapseSidenavSecEx3" aria-labelledby="sidenavSecEx3" data-bs-parent="#sidenavSecExample">
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 3</a>
-        </li>
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 4</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <hr class="my-2">
-  <ul class="relative px-1">
-    <li class="relative">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" href="#!" data-mdb-ripple="true" data-mdb-ripple-color="primary">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path fill="currentColor" d="M488.6 250.2L392 214V105.5c0-15-9.3-28.4-23.4-33.7l-100-37.5c-8.1-3.1-17.1-3.1-25.3 0l-100 37.5c-14.1 5.3-23.4 18.7-23.4 33.7V214l-96.6 36.2C9.3 255.5 0 268.9 0 283.9V394c0 13.6 7.7 26.1 19.9 32.2l100 50c10.1 5.1 22.1 5.1 32.2 0l103.9-52 103.9 52c10.1 5.1 22.1 5.1 32.2 0l100-50c12.2-6.1 19.9-18.6 19.9-32.2V283.9c0-15-9.3-28.4-23.4-33.7zM358 214.8l-85 31.9v-68.2l85-37v73.3zM154 104.1l102-38.2 102 38.2v.6l-102 41.4-102-41.4v-.6zm84 291.1l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6zm240 112l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.6l102-38.2 102 38.2v.6z"></path>
-        </svg>
-        <span>Non-collapsible link</span>
-      </a>
-    </li>
-    <li class="relative" id="sidenavXxEx2">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavXxEx2" aria-expanded="false" aria-controls="collapseSidenavXxEx2">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="comments" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-          <path fill="currentColor" d="M416 192c0-88.4-93.1-160-208-160S0 103.6 0 192c0 34.3 14.1 65.9 38 92-13.4 30.2-35.5 54.2-35.8 54.5-2.2 2.3-2.8 5.7-1.5 8.7S4.8 352 8 352c36.6 0 66.9-12.3 88.7-25 32.2 15.7 70.3 25 111.3 25 114.9 0 208-71.6 208-160zm122 220c23.9-26 38-57.7 38-92 0-66.9-53.5-124.2-129.3-148.1.9 6.6 1.3 13.3 1.3 20.1 0 105.9-107.7 192-240 192-10.8 0-21.3-.8-31.7-1.9C207.8 439.6 281.8 480 368 480c41 0 79.1-9.2 111.3-25 21.8 12.7 52.1 25 88.7 25 3.2 0 6.1-1.9 7.3-4.8 1.3-2.9.7-6.3-1.5-8.7-.3-.3-22.4-24.2-35.8-54.5z"></path>
-        </svg>
-        <span>Collapsible item 3</span>
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-          <path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path>
-        </svg>
-      </a>
-      <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx2" aria-labelledby="sidenavXxEx2" data-bs-parent="#sidenavSecExample">
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 5</a>
-        </li>
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 6</a>
-        </li>
-      </ul>
-    </li>
-    
-    <!-- <li class="relative" id="sidenavXxEx3">
-      <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out cursor-pointer" data-mdb-ripple="true" data-mdb-ripple-color="primary" data-bs-toggle="collapse" data-bs-target="#collapseSidenavXxEx3" aria-expanded="false" aria-controls="collapseSidenavXxEx3">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 mr-3" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path fill="currentColor" d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"></path>
-        </svg>
-        <span>Collapsible item 4</span>
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3 ml-auto" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-          <path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path>
-        </svg>
-      </a>
-      <ul class="relative accordion-collapse collapse" id="collapseSidenavXxEx3" aria-labelledby="sidenavXxEx3" data-bs-parent="#sidenavSecExample">
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 7</a>
-        </li>
-        <li class="relative">
-          <a href="#!" class="flex items-center text-xs py-4 pl-12 pr-6 h-6 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="primary">Link 8</a>
-        </li>
-      </ul>
-    </li> -->
-  </ul>
- 
-</div>
-
-
-
 </template>
 
 <script>
-
-import { logout,readUserPostsList } from "../FirebaseFunc/firebase";
-
+import { logout, readUserPostsList,deletePost } from "../FirebaseFunc/firebase";
+import newFileModal from "./newFileModal.vue";
+import renameFileModal from './renameFileModal.vue'
 // import { useRouter } from "vue-router";
-import {useStore} from 'vuex'
-export default{
-
-  setup(){
+import { useStore } from "vuex";
+import { onMounted, ref } from "vue";
+export default {
+  components: { newFileModal,renameFileModal },
+  setup() {
     // const router = useRouter();
     const store = useStore();
-    const logoutHandler=async ()=>{
+    const sidaNavSize = ref("100%");
+    const visibleTrigger = ref(true);
+    const renameVisibleTrigger = ref(true);
+    const itemName = ref('');
+    const logoutHandler = async () => {
+      console.log("logout");
       await logout();
-    }
-    const saveHandler = ()=>{
-      console.log(store.state.saveFlag);
-      store.commit("setSaveFlag",true);
-    }
-    const fileHandler = (item)=>{
-      store.commit('setChoseFile',item);
-      console.log(store.state.serverPostListUpdated[item]);
-    }
+    };
+    const saveHandler = () => {
+      if(store.state.choseFileName){
+        console.log(store.state.saveFlag);
+        store.commit("setSaveFlag", true);
+      }else{
+        console.log('沒檔案怎麼儲存');
+      }
+      
+    };
+    const fileHandler = (item) => {
+      store.commit("setChoseFile", item);
+    };
+    const newOneHandler = () => {
+      visibleTrigger.value = !visibleTrigger.value;
+    };
 
-    
+    const itemMenu = (item) => {
+      console.log(item);
+    };
 
+    const deleteFile = async (fileName) => {
+      //delete
+      
+      await deletePost(store.state.userid,fileName);
+    };
+
+    const updateFile = async (item) => {
+      console.log('item ',item)
+      renameVisibleTrigger.value = !renameVisibleTrigger.value;
+      
+      itemName.value = item; 
+    };
     //傳入keyid filename
     // const chooseFile =()=> {
     //   readUserData()
     //   store.commit('setChoseFileName','a1')
-      
+
     // }
-    if(store.state.loggedIn){
+    if (store.state.loggedIn) {
       readUserPostsList(store.state.userid);
     }
-    
 
-    return {logoutHandler,saveHandler,store,fileHandler}
-  }
-}
+    onMounted(() => {
+      window.addEventListener("resize", () => {
+        //detect the browser resize to the sideNav
+        sidaNavSize.value = window.innerHeight * 0.95 + "px";
+      });
+    });
+
+    return {
+      logoutHandler,
+      saveHandler,
+      store,
+      visibleTrigger,
+      fileHandler,
+      newOneHandler,
+      itemMenu,
+      deleteFile,
+      updateFile,
+      renameVisibleTrigger,
+      itemName
+    };
+  },
+};
 </script>
 
 <style scoped>
-.clickani{
+.clickani {
   background-color: burlywood;
 }
 
+.sidenavSize {
+  height: v-bind(sidaNavSize);
+}
 </style>

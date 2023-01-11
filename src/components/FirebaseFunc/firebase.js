@@ -1,7 +1,7 @@
 
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import {getDatabase,ref,set,onValue} from "firebase/database";
+import {getDatabase,ref,set,onValue,remove,get,child} from "firebase/database";
 import { store } from "../../store";
  
 const firebaseConfig = {
@@ -36,9 +36,14 @@ export async function logout() {
 }        
         
 export async function writeUserData(userId, para) {  
-  console.log('write')
-  await set(ref(db, 'users/' + userId+'/postList/'+para.fileName), para.data);
-  store.commit('setSaveFlag',false)
+  console.log('write ',para)
+  if(para){
+    await set(ref(db, 'users/' + userId+'/postList/'+para.fileName), para.data);
+    store.commit('setSaveFlag',false)
+  }else{
+    throw 'save error, no fileName'
+  }
+  
 }
 
 // export async function createFile(){
@@ -49,33 +54,68 @@ export async function writeUserData(userId, para) {
 
 export function readUserData(userid,path){
   
-  const starCountRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
+  const dbRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
   console.log('path ',path);
   console.log('userid ',userid);
-  onValue(starCountRef, (snapshot) => {
+   //read data and trigger the editor update context
+  onValue(dbRef, (snapshot) => {
     // console.log(snapshot.val());
-    console.log(snapshot.val())
-    store.commit('getServerData',snapshot.val())
-
-});
+    if(snapshot.val()){
+      store.commit('getServerData',snapshot.val())  
+    }else{
+      store.commit('getServerData','')
+    }
+  });  
+ 
+  
 }
 
 export function readUserPostsList(userid){
   
-  const starCountRef = ref(db, 'users/' + userid +'/postList'); 
+  const dbRef = ref(db, 'users/' + userid +'/postList'); 
   
-  onValue(starCountRef, (snapshot) => {
+  onValue(dbRef, (snapshot) => {
     // console.log(snapshot.val());
-    
-    const arr = Object.keys(snapshot.val())
-    let postJson = {}
-    for(const item in arr ){
-      postJson[arr[item]]=false;
-      
-    }
-    console.log(Object.keys(snapshot.val()));
+    let postJson={}
+    if(snapshot.val()){
+      const arr = Object.keys(snapshot.val())
+      for(const item in arr ){
+        postJson[arr[item]]=false;
+        
+      }
+    }    
+    // console.log(Object.keys(snapshot.val()));
     store.commit('getServerPostslist',postJson)
 
 });
 }
 
+export async function deletePost(userid,path){
+  const dbRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
+  await remove(dbRef).then(()=>{
+    console.log('delete item')
+    // readUserPostsList(userid);
+  })
+  console.log('after delete');
+}
+
+export async function renamePostTitle(userid,oldName,newName){
+  
+  let newData={}
+  const dbRef = ref(db)
+
+  get(child(dbRef, `users/${userid}/postList/${oldName}`)).then(async(snapshot) => {
+    if (snapshot.exists()) {
+      newData = {fileName:newName,data:snapshot.val()};
+      console.log(snapshot.val());
+      await writeUserData(userid,newData);
+      await deletePost(userid,oldName);
+    } else {
+      console.log("No data available");
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+  
+ 
+}

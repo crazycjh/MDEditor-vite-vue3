@@ -44,19 +44,26 @@ export const store = createStore({
             state.serverPostListUpdated = para;
         },
         setChoseFile(state,para){
-            state.serverPostListUpdated[para] = true;
-            console.log('set choose')
-            if(state.choseFileName !== para){
-                readUserData(state.userid,para)
-                if(state.choseFileName){
-                    if(state.choseFileName !== state.serverPostListUpdated[para]){
-                        state.serverPostListUpdated[state.choseFileName]=false;
+            //set the flag for the file that be chosen
+            
+            console.log('set choose ',para )
+            if(para){
+                state.serverPostListUpdated[para] = true;
+                if(state.choseFileName !== para ){ //prev chose !== current choose
+                    readUserData(state.userid,para) 
+                    if(state.choseFileName){
+                        if(state.choseFileName !== state.serverPostListUpdated[para]){
+                            state.serverPostListUpdated[state.choseFileName]=false;
+                            state.choseFileName = para
+                        }
+                        
+                    }else{
                         state.choseFileName = para
                     }
-                    
-                }else{
-                    state.choseFileName = para
                 }
+            }
+            else{ //none
+                state.choseFileName = para;
             }
         }
         

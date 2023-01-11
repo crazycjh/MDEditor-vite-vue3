@@ -5,7 +5,6 @@
         className="codemirror"
         v-model="codeRef"
         default-value="```  let test='abc'   ```"
-        :read-only="readOnly"
       />
     </div>
     <div
@@ -18,10 +17,10 @@
 </template>
 
 <script>
-import { ref, computed, onMounted,watch } from "vue";
-import { useStore } from 'vuex';
+import { ref, computed, onMounted, watch } from "vue";
+import { useStore } from "vuex";
 import VueCodemirror from "./codemirror/vueCodemirror.vue"; // @ is an alias to /src
-import { getCurrentUser, writeUserData } from './FirebaseFunc/firebase'
+import { getCurrentUser, writeUserData } from "./FirebaseFunc/firebase";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
@@ -40,63 +39,63 @@ export default {
   },
   setup() {
     const codeRef = ref("");
-    const readOnly = ref(false);
+    
     const message = ref("");
     // let app = "";
     const mdSize = ref("");
 
     const store = useStore();
-    watch(()=>store.state.saveFlag,async()=>{
-      //add the spin animation
-      const user = await getCurrentUser();
-      await writeUserData(user.uid,{fileName:store.state.choseFileName,data:codeRef.value})
-      
-      
-    })
+    watch(
+      () => store.state.saveFlag,
+      async () => {
+        //add the spin animation
+        if(store.state.saveFlag){
+          const user = await getCurrentUser();
+          await writeUserData(user.uid, {
+          fileName: store.state.choseFileName,
+          data: codeRef.value,
+        });
+        }
+        
+      }
+    );
 
-    // const onSetReadOnly = () => {
-    //   readOnly.value = !readOnly.value;
-    //   console.log("xxx", readOnly.value);
-    // };
-    
+
     //set the marked editor
     marked.setOptions({
-        renderer: new marked.Renderer(),
-        highlight: function (code) {
-          console.log("code code ", code);
-          // const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      renderer: new marked.Renderer(),
+      highlight: function (code) {
+        console.log("code code ", code);
+        // const language = hljs.getLanguage(lang) ? lang : 'plaintext';
 
-          return hljs.highlightAuto(code).value;
-        },
-        langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
-        pedantic: false,
-        gfm: true,
-        breaks: false,
-        sanitize: false,
-        smartypants: false,
-        xhtml: false,
-      });
-    
-      //compile the text from marked editor 
-      const markedCompile = computed(() => { 
-      const htmlcode = marked.parse(codeRef.value);
-      return htmlcode;
-    
+        return hljs.highlightAuto(code).value;
+      },
+      langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
+      pedantic: false,
+      gfm: true,
+      breaks: false,
+      sanitize: false,
+      smartypants: false,
+      xhtml: false,
     });
 
+    //compile the text from marked editor
+    const markedCompile = computed(() => {
+      const htmlcode = marked.parse(codeRef.value);
+      return htmlcode;
+    });
 
     onMounted(() => {
-      //resize preview 
-      window.addEventListener('resize',()=>{
+      //resize preview
+      window.addEventListener("resize", () => {
         //detect the browser resize to the editor
-        mdSize.value = (window.innerHeight*0.95)+'px'; 
-      })
-    })
+        mdSize.value = window.innerHeight * 0.95 + "px";
+        console.log(mdSize.value,' mdSize.value')
+
+      });
+    });
     return {
       codeRef,
-      readOnly,
-      // onChangeCodeContent,
-      // onSetReadOnly,
       markedCompile,
       message,
       mdSize,
@@ -135,7 +134,7 @@ export default {
 }
 
 .md-size {
-  width:mdSize;
+  height: v-bind(mdSize);
 }
 @import "../assets/css/light";
 @import "../assets/css/theme";

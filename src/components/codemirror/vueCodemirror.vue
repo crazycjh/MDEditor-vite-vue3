@@ -1,6 +1,6 @@
 <template>
     <div class="className">
-        <textarea ref="codeEditor" placeholder="新想法，從這開始！"></textarea>
+        <textarea id="codemirrortext" ref="codeEditor" placeholder="新想法，從這開始！"></textarea>
     </div>
     
 
@@ -8,7 +8,7 @@
 
 <script>
 import { onBeforeUnmount, onMounted, ref, toRefs, watch } from "vue";
-import {readUserData} from '../FirebaseFunc/firebase.js'
+
 import {useStore} from 'vuex'
 
 import CodeMirror from "codemirror";
@@ -50,11 +50,11 @@ export default ({
     defaultValue: String,
     readOnly: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   setup(props, context) {
-    const { modelValue, readOnly,className } = toRefs(props);
+    const { modelValue,className } = toRefs(props);
     const codeEditor = ref();
     let editor;
     
@@ -63,35 +63,39 @@ export default ({
     watch(modelValue, () => {
         console.log('codeEditor :', codeEditor);
       if (null != editor && modelValue.value && modelValue.value !== editor.getValue()) {
-        // 触发v-model的双向绑定
-        
+      //check new data
         editor.setValue(modelValue.value);
       }
     });
-    watch(readOnly, () => {
-      if (null != editor) {
-        editor.setOption("readOnly", readOnly.value);
+    
+    watch(()=>store.state.choseFileName,()=>{
+      if(store.state.choseFileName){
+        if (null !== editor) {
+          editor.setOption("readOnly", false);
+        }
       }
-    });
-    watch(()=>store.state.serverDataUpdated,()=>{
+    })
+    
+    
+    watch(()=>[store.state.serverDataUpdated,store.state.choseFileName],()=>{
       console.log('watch server data ',store.state.serverDataUpdated)
-      if(editor && store.state.serverDataUpdated){
+      if(editor){
         editor.setValue(store.state.serverDataUpdated);
       }
     })
-    // const user = await getCurrentUser();
-    readUserData(store.state.userid,'a1');
-    console.log("read data");
-
+    
+    
+    
     onMounted(async() => {
-      editor = CodeMirror.fromTextArea(codeEditor.value, {
+      // editor = CodeMirror.fromTextArea(codeEditor.value, {
+      editor = CodeMirror.fromTextArea(document.getElementById('codemirrortext'), {  
         value: modelValue.value,
         mime: "text/javascript",
         indentWithTabs: false, // 在缩进时，是否需要把 n*tab宽度个空格替换成n个tab字符，默认为false
         smartIndent: true, // 自动缩进，设置是否根据上下文自动缩进（和上一行相同的缩进量）。默认为true
         lineNumbers: true, // 是否在编辑器左侧显示行号
         matchBrackets: true, // 括号匹配
-        readOnly: readOnly.value,
+        readOnly: true,
         // 启用代码折叠相关功能:开始
         foldGutter: true,
         lineWrapping: true,
@@ -105,12 +109,12 @@ export default ({
       // 监听编辑器的change事件
       console.log(window.screen.height);
       editor.setSize('auto',(window.innerHeight*0.95)+'px')
-      editor.on("change", () => {
+      editor.on("change", (_,para) => {
         // 触发v-model的双向绑定
-        
+        console.log(para)
         // console.log('getValue',editor.doc.getValue());
         // console.log('getValue without doc',editor.getValue());
-        context.emit("update:modelValue", editor.getValue());
+        context.emit("update:modelValue", editor.doc.getValue());
       });
       editor.on('cursorActivity',()=>{
         
