@@ -102,6 +102,7 @@ export default {
     
     document.addEventListener("click",(event)=>{
       if(event.target.matches(".outingLink")){
+        if( event.target.textContent in store.state.serverPostListUpdated)
         store.commit('setChoseFile',event.target.textContent);
       }
     })

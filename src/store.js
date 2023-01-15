@@ -52,10 +52,10 @@ export const store = createStore({
                 if(state.choseFileName !== para ){ //prev chose !== current choose
                     readUserData(state.userid,para) 
                     if(state.choseFileName){
-                        if(state.choseFileName !== state.serverPostListUpdated[para]){
+                        // if(state.choseFileName !== state.serverPostListUpdated[para]){
                             state.serverPostListUpdated[state.choseFileName]=false;
                             state.choseFileName = para
-                        }
+                        // }
                         
                     }else{
                         state.choseFileName = para
