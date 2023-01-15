@@ -125,7 +125,7 @@ export default ({
       // 监听编辑器的change事件
       console.log(window.screen.height);
       editor.setSize('auto',(window.innerHeight*0.95)+'px')
-      editor.setOption('hintOptions',{completeSingle: false, keyword: ['[[test','string','123','abc']})
+      editor.setOption('hintOptions',{completeSingle: false})
       editor.on("change", () => {
         // 触发v-model的双向绑定
         context.emit("update:modelValue", editor.doc.getValue());
