@@ -1,5 +1,5 @@
 <template>
-  <div class="markdown-content flex">
+  <div class="markdown-content flex " >
     <div class="w-1/2 overflow-auto h-600">
       <VueCodemirror
         className="codemirror"
@@ -8,14 +8,15 @@
       />
     </div>
     <div
-      class="markdown-preview markdown-theme-light w-1/2 overflow-auto md-size"
-      style="background-color: #f9f9f9"
+      class="markdown-preview markdown-theme-light w-1/2 overflow-auto "
+      :style="{ height: mdSize }"
+      
     >
       <div v-html="markedCompile"></div>
     </div>
   </div>
 </template>
-
+<!-- :style="{ 'height': mdSize }" -->
 <script>
 import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
@@ -24,14 +25,6 @@ import { getCurrentUser, writeUserData } from "./FirebaseFunc/firebase";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-// import { initializeApp } from "firebase/app";
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-// import {
-//   getDatabase,
-//   ref as refFirebase,
-//   onValue,
-//   set,
-// } from "firebase/database";
 
 export default {
   components: {
@@ -39,10 +32,10 @@ export default {
   },
   setup() {
     const codeRef = ref("");
-    
     const message = ref("");
     // let app = "";
-    const mdSize = ref("");
+    const mdSize = ref('');
+    const outgoLinkHTML = ref('');
 
     const store = useStore();
     watch(
@@ -67,16 +60,55 @@ export default {
       highlight: function (code) {
         console.log("code code ", code);
         // const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-
         return hljs.highlightAuto(code).value;
       },
       langPrefix: "hljs language-", // highlight.js css expects a top-level 'hljs' class.
       pedantic: false,
       gfm: true,
-      breaks: false,
+      breaks: true,
       sanitize: false,
       smartypants: false,
       xhtml: false,
+    });
+
+    
+
+    const outgolink = {
+      name: 'outgolink',
+      level: 'inline',
+      start(src) {
+        return src.match(/^\[{2}/)?.index;  
+      },
+      tokenizer(src) {
+        const rule = /(^\[{2})([^[\]]+)(\]{2})/;
+        const match = rule.exec(src);
+        console.log('match ',match);
+        if (match) {
+          return {
+            type: 'outgolink',
+            raw: match[0],
+            text: match,
+          };
+        }
+        return null;
+      },
+      renderer(token) {
+        outgoLinkHTML.value = `<a href="#" style="color:blue;text-decoration:underline;" class="outingLink" >${token.text[2]}</a>` 
+        // outgoLinkHTML.value = `<span style="color:blue;text-decoration:underline;" @click="outgoingClick(token.text[2])" >${token.text[2]}</span>` 
+        return outgoLinkHTML.value
+            
+        },
+    };
+    
+    document.addEventListener("click",(event)=>{
+      if(event.target.matches(".outingLink")){
+        store.commit('setChoseFile',event.target.textContent);
+      }
+    })
+
+ 
+    marked.use({
+      extensions: [outgolink],
     });
 
     //compile the text from marked editor
@@ -87,6 +119,8 @@ export default {
 
     onMounted(() => {
       //resize preview
+      mdSize.value = window.innerHeight * 0.95 + "px"
+      console.log(' mdSize.value', mdSize.value)
       window.addEventListener("resize", () => {
         //detect the browser resize to the editor
         mdSize.value = window.innerHeight * 0.95 + "px";
@@ -123,19 +157,19 @@ export default {
   padding-bottom: 0;
   .codemirror {
     flex: 1;
-    height: 100%;
+    
     overflow: auto;
   }
 
   .markdown-preview {
     flex: 1;
-    height: 100%;
+    
   }
 }
-
-.md-size {
-  height: v-bind(mdSize);
+.md_size{
+  height:v-bind(mdSize);
 }
+
 @import "../assets/css/light";
 @import "../assets/css/theme";
 

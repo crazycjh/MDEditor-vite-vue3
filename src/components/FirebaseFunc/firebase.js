@@ -39,6 +39,7 @@ export async function writeUserData(userId, para) {
   console.log('write ',para)
   if(para){
     await set(ref(db, 'users/' + userId+'/postList/'+para.fileName), para.data);
+    store.commit("setChoseFile", para.fileName);
     store.commit('setSaveFlag',false)
   }else{
     throw 'save error, no fileName'
@@ -94,6 +95,8 @@ export async function deletePost(userid,path){
   const dbRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
   await remove(dbRef).then(()=>{
     console.log('delete item')
+    store.commit("setChoseFile", '');
+    store.commit('getServerData','');
     // readUserPostsList(userid);
   })
   console.log('after delete');

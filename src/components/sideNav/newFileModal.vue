@@ -49,6 +49,7 @@ export default{
 
             if(inputFileName.value){
                 writeUserData(store.state.userid,{fileName:inputFileName.value,data:''});
+                
             }else{
                 writeUserData(store.state.userid,{fileName:'undefined',data:''});
             }

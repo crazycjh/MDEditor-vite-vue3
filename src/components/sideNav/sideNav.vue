@@ -118,26 +118,7 @@
           >
         </a>
       </li>
-      <!-- <li>
-        <button type="button" class="px-6
-          py-2.5
-          bg-blue-600
-          text-white
-          font-medium
-          text-xs
-          leading-tight
-          uppercase
-          rounded
-          shadow-md
-          hover:bg-blue-700 hover:shadow-lg
-          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-          active:bg-blue-800 active:shadow-lg
-          transition
-          duration-150
-          ease-in-out" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Launch demo modal
-        </button>
-      </li> -->
+
     </ul>
   </div>
 </template>
@@ -148,19 +129,24 @@ import newFileModal from "./newFileModal.vue";
 import renameFileModal from './renameFileModal.vue'
 // import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 export default {
   components: { newFileModal,renameFileModal },
   setup() {
     // const router = useRouter();
     const store = useStore();
+    const router = useRouter();
+
     const sidaNavSize = ref("100%");
     const visibleTrigger = ref(true);
     const renameVisibleTrigger = ref(true);
     const itemName = ref('');
+    
     const logoutHandler = async () => {
       console.log("logout");
       await logout();
+      router.push({ path: "/auth" });
     };
     const saveHandler = () => {
       if(store.state.choseFileName){
@@ -194,12 +180,7 @@ export default {
       
       itemName.value = item; 
     };
-    //傳入keyid filename
-    // const chooseFile =()=> {
-    //   readUserData()
-    //   store.commit('setChoseFileName','a1')
-
-    // }
+    
     if (store.state.loggedIn) {
       readUserPostsList(store.state.userid);
     }
