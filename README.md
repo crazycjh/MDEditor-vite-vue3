@@ -1,3 +1,6 @@
+##### Demo : https://vue-mdeditor.web.app
+##### 技術筆記 : https://reurl.cc/MR7dem
+
 # MDEditor-vite-vue3
 
 ### Description
@@ -28,3 +31,4 @@ there is a showHint code for the codemirror named javacripte-hint.js in the root
 You can put the file to node_modules/codemirror/hint/ to replace the original one.
 Then you will get a document list hint function.
 I am looking for the method the add the function as nomal way.
+
