@@ -160,37 +160,19 @@ export default {
   setup() {
     const store = useStore();
 
-    const emailaddress = ref("");
-    const pwd = ref("");
+    const emailaddress = ref('aaa@bbbb.com');
+    const pwd = ref("123456");
 
     const router = useRouter();
     
 
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) {
-    //     // User is signed in, see docs for a list of available properties
-    //     // https://firebase.google.com/docs/reference/js/firebase.User
-    //     // const uid = user.uid;
-    //     console.log("這裡有進來嗎？")
-    //     router.push({path:'/editor'});
-    //   }
-    // });
-
-    // const login = ((account,passWord)=>{
-    //   //同時acc pw都有輸入，account 必須為email,password 6碼，按鈕才能點擊
-    // })
-    // watch(account,(value)=>{
-    //   console.log(value);
-    //   x.value = value;
-
-    // });
     // valid the entered email
 
     const validEmail = computed(() => {
       const checkText = /^[a-zA-Z0-9@.]+$/;
 
       if (!checkText.test(emailaddress.value)) {
-        console.log(emailaddress.value.length);
+        // console.log(emailaddress.value.length);
         if (emailaddress.value === "") {
           return false;
         } else console.log(emailaddress.value);
@@ -210,7 +192,7 @@ export default {
       event.preventDefault();
 
       // signInWithEmailAndPassword(auth, 'aaa@bbbb.com', '123456')
-      //login with email and password
+      //login with email and password aaa@bbbb.com
       const userCredential = await login(emailaddress.value, pwd.value);
       store.commit("setLoginState",{login:true,uid:userCredential.user.uid})
       router.push({ path: "/editor" });

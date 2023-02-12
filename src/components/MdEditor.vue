@@ -4,7 +4,7 @@
       <VueCodemirror
         className="codemirror"
         v-model="codeRef"
-        default-value="```  let test='abc'   ```"
+        default-value=""
       />
     </div>
     <div

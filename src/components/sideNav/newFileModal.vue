@@ -6,6 +6,7 @@
         <dialogModal @close="clearModal" :open="visible">
             <label for="fileName">檔名</label>
             <input type="text" placeholder="enter file name" name="fileName" class="ml-4" v-model="inputFileName">
+            <div v-if="sameNameProm" class="text-xs text-red-600">檔名已存在</div>
             <div class="flex flex-shrink-0 flex-wrap items-center justify-end ">
                 <button @click="clearModal">Cancel</button>
                 <button class="px-3
@@ -27,6 +28,7 @@
                     ml-2" @click="createNewHanler">Create</button>
             </div>
             
+            
         </dialogModal>
     </Teleport>
 </div>
@@ -45,15 +47,22 @@ export default{
         const inputFileName = ref('')
         const store = useStore();
         const visible = ref(false)
+        const sameNameProm = ref(false);
         const createNewHanler = ()=>{
-
-            if(inputFileName.value){
+            if(!(inputFileName.value in store.state.serverPostListUpdated)){
+                if(inputFileName.value){
                 writeUserData(store.state.userid,{fileName:inputFileName.value,data:''});
-                
-            }else{
+
+                }else{
                 writeUserData(store.state.userid,{fileName:'undefined',data:''});
+                }
+                sameNameProm.value = false;
+                clearModal()
+            }else{
+                sameNameProm.value = true;
             }
-            clearModal()
+            
+            
         };
         
         const clearModal = ()=>{
@@ -63,7 +72,7 @@ export default{
         watch(()=>props.visibleTrigger,()=>{
             visible.value=true;
         })
-        return { createNewHanler,inputFileName,clearModal,visible }
+        return { createNewHanler,inputFileName,clearModal,visible,sameNameProm }
     }
 }
 
