@@ -33,6 +33,7 @@ Then you will get a document list hint function.
 I am looking for the method the add the function as nomal way.
 
 中文簡介：
+
 1.以Firebase 提供的功能當作後端串接前端，支援帳號登入驗證、資料讀取/寫入，在資料部分使用Realtime database功能，並且可以依照使用者個別存取資料。
 
 2.編輯器使用Codemirror version5，Markdown編譯引擎選擇”Marked”，在codemirror編輯器輸入文字同時會把文字透過marked API轉換成對應的HTML code並顯示在畫面右邊。
