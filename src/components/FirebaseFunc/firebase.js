@@ -36,7 +36,6 @@ export async function logout() {
 }        
         
 export async function writeUserData(userId, para) {  
-  console.log('write ',para)
   if(para){
     await set(ref(db, 'users/' + userId+'/postList/'+para.fileName), para.data);
     store.commit("setChoseFile", para.fileName);
@@ -56,11 +55,9 @@ export async function writeUserData(userId, para) {
 export function readUserData(userid,path){
   
   const dbRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
-  console.log('path ',path);
-  console.log('userid ',userid);
    //read data and trigger the editor update context
   onValue(dbRef, (snapshot) => {
-    // console.log(snapshot.val());
+    
     if(snapshot.val()){
       store.commit('getServerData',snapshot.val())  
     }else{
@@ -94,12 +91,10 @@ export function readUserPostsList(userid){
 export async function deletePost(userid,path){
   const dbRef = ref(db, 'users/' + userid +'/postList/'+path); //path:post
   await remove(dbRef).then(()=>{
-    console.log('delete item')
     store.commit("setChoseFile", '');
     store.commit('getServerData','');
     // readUserPostsList(userid);
   })
-  console.log('after delete');
 }
 
 export async function renamePostTitle(userid,oldName,newName){
@@ -110,14 +105,13 @@ export async function renamePostTitle(userid,oldName,newName){
   get(child(dbRef, `users/${userid}/postList/${oldName}`)).then(async(snapshot) => {
     if (snapshot.exists()) {
       newData = {fileName:newName,data:snapshot.val()};
-      console.log(snapshot.val());
       await writeUserData(userid,newData);
       await deletePost(userid,oldName);
     } else {
       console.log("No data available");
     }
   }).catch((error) => {
-    console.error(error);
+    console.error(error);// add modal something went wrong
   });
   
  

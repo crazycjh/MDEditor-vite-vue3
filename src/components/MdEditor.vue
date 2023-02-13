@@ -58,7 +58,6 @@ export default {
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight: function (code) {
-        console.log("code code ", code);
         // const language = hljs.getLanguage(lang) ? lang : 'plaintext';
         return hljs.highlightAuto(code).value;
       },
@@ -82,7 +81,6 @@ export default {
       tokenizer(src) {
         const rule = /(^\[{2})([^[\]]+)(\]{2})/;
         const match = rule.exec(src);
-        console.log('match ',match);
         if (match) {
           return {
             type: 'outgolink',
@@ -121,11 +119,10 @@ export default {
     onMounted(() => {
       //resize preview
       mdSize.value = window.innerHeight * 0.95 + "px"
-      console.log(' mdSize.value', mdSize.value)
+
       window.addEventListener("resize", () => {
         //detect the browser resize to the editor
         mdSize.value = window.innerHeight * 0.95 + "px";
-        console.log(mdSize.value,' mdSize.value')
 
       });
     });

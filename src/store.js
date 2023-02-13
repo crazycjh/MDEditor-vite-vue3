@@ -31,22 +31,18 @@ export const store = createStore({
             
         },
         setSaveFlag(state,para){
-            console.log("mutation para ",para)
             state.saveFlag=para;
         },
         getServerData(state,para){
-            // console.log(Object.keys(para));
-            console.log(para);
+
             state.serverDataUpdated = para;
         },
         getServerPostslist(state,para){
-            console.log(para);
+
             state.serverPostListUpdated = para;
         },
         setChoseFile(state,para){
             //set the flag for the file that be chosen
-            
-            console.log('set choose ',para )
             if(para){
                 state.serverPostListUpdated[para] = true;
                 if(state.choseFileName !== para ){ //prev chose !== current choose
@@ -70,26 +66,20 @@ export const store = createStore({
             state.editorInsatance = cm;
         },
         appendEditorText(state,para){
-            // 開頭 heading(單行)、list、number list(可多行)
-            // 前後 斜體、粗體、code(多單行都可以)
-            //type 1 : 開頭 多行：判斷是否要每行都要加 單行：加
-            //type 2 : 前後皆有 多行
             let str = state.editorInsatance.getSelections()
-            console.log('str ',str)
             let arrStr=[];
             
-            console.log(para.type);
+            
             if(str[0]!==''){
                 if(str[0]){
                     arrStr = str[0].split('\n');
-                    console.log(arrStr);
+                    
                 }
                 if(para.type === 'head'){ //start side
                     if(para.line === 'one'){ //one line
                         arrStr[0] = para.symbol+" "+arrStr[0];
     
-                        state.editorInsatance.replaceSelection(arrStr.join('\n'));
-                        console.log("head, one",para.symbol);
+                        state.editorInsatance.replaceSelection(arrStr.join('\n'),'around');
                     }else if(para.line === 'multi'){ //multi line
                         for(let i=0;i<arrStr.length;i++){
                             if(arrStr[i] !== ''){
@@ -102,15 +92,19 @@ export const store = createStore({
                         }
                         let replaceArr = [];
                         replaceArr[0] = arrStr.join(' \n')
-                        state.editorInsatance.replaceSelection(replaceArr[0]);
+                        state.editorInsatance.replaceSelection(replaceArr[0],'around');
                         
                     }
                 }else if(para.type === 'both'){ //both side
                     if(para.line === 'one'){ //one line
-                        console.log("both, one",para.symbol);
+                        console.log();
                     }else if(para.line === 'multi'){ //multi line
-                        console.log("both, multi",para.symbol);
+                        console.log();
                     }
+                }else if(para.type === 'link'){
+                    console.log();
+                }else if(para.type === 'photo'){
+                    console.log();
                 }
             }else{
                 if(para.symbol === 'num'){
@@ -124,14 +118,7 @@ export const store = createStore({
                     
                 }
                 
-            }
-            
-            console.log(state.editorInsatance.getSelections());
-            
-            //head(each line or not) / around :head and tail
-            
-            // state.editorInsatance.replaceSelection('# '+state.editorInsatance.getSelection());
-            //type:
+            }            
         }
         
         

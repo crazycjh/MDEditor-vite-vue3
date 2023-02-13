@@ -17,7 +17,7 @@ export default{
             context.emit('close')
 
         }
-        console.log(props.open);
+
         return {backdropClick,props}
     }
 }

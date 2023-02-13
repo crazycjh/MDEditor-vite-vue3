@@ -50,7 +50,6 @@ export default{
         const store  = useStore();
         const appendSomething = (symbol,type,line)=>{
             // store.commit('appendEditorText',{type:,line:})
-            console.log('appendEditorText');
             if(store.state.choseFileName !==""){
                 store.commit('appendEditorText',{symbol:symbol,type:type,line:line})
             }

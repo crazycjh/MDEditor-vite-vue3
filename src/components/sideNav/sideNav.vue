@@ -144,13 +144,11 @@ export default {
     const itemName = ref('');
     
     const logoutHandler = async () => {
-      console.log("logout");
       await logout();
       router.push({ path: "/auth" });
     };
     const saveHandler = () => {
       if(store.state.choseFileName){
-        console.log(store.state.saveFlag);
         store.commit("setSaveFlag", true);
       }else{
         console.log('沒檔案怎麼儲存');
@@ -175,7 +173,6 @@ export default {
     };
 
     const updateFile = async (item) => {
-      console.log('item ',item)
       renameVisibleTrigger.value = !renameVisibleTrigger.value;
       
       itemName.value = item; 

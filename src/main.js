@@ -41,15 +41,14 @@ const router = createRouter({
       path: "/auth",
       component: authicationLogin,
       beforeEnter: (to, from, next) => {
-        console.log("beforeEnter auth");
+
         if (store.state.loggedIn) {
-          console.log("beforeEnter if");
+
           // next('/editor')
           next("/editor");
           return;
           //login is true redirect from auth to editor
         } else {
-          console.log("beforeEnter not login ", to.path);
           next();
           return;
         }
@@ -59,7 +58,6 @@ const router = createRouter({
       path: "/editor",
       component: entireEditor,
       beforeEnter: (to, from, next) => {
-        console.log("beforeEnter editor");
         next();
         return;
       },
@@ -72,20 +70,16 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.path !== "/auth") {
     if (user) {
-      console.log("beforeEach not auth login ", to.path);
       store.dispatch("setLoginState", { login: true, uid: user.uid });
       next();
       return;
     } else {
-      console.log("beforeEach not auth not login", to.path);
       store.dispatch("setLoginState", { login: false, uid: "" });
       next("/auth");
       return;
     }
   } else {
-    console.log("beforeEach  auth ", to.path);
     if (user) {
-      console.log("beforeEach  auth login ", to.path);
       store.dispatch("setLoginState", { login: true, uid: user.uid });
     } else {
       store.dispatch("setLoginState", { login: false, uid: "" });

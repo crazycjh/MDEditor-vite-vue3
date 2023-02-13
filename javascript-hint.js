@@ -13,7 +13,6 @@
     var Pos = CodeMirror.Pos;
   
     function forEach(arr, f) {
-      console.log(arr);
       for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
     }
   
@@ -34,11 +33,9 @@
       // Find the token at the cursor
       let list = [];
       var cur = editor.getCursor(), token = getToken(editor, cur);
-      console.log('token scriptHint',token);
-
-     
+      
       if (!/^[\w$_]*$/.test(token.string)) { //檢查是不是符合英文、數字以及 $ _ 這些字元，如果不是就進來，並且把string清空
-        console.log(token)
+        
         token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                  type: token.string == "." ? "property" : null};
         
@@ -53,13 +50,13 @@
         const frontStr1 = JSON.parse(JSON.stringify(cur));
         frontStr1.ch =  token.start;
         const checkBrackets1 = getToken(editor, frontStr1);
-        console.log('checkBrackets1',checkBrackets1)
+        
         if(checkBrackets1.string === '[' && checkBrackets1.end-checkBrackets1.start === 1){
             const frontStr2 = JSON.parse(JSON.stringify(cur));
             frontStr2.ch =  token.start-1;
             
             const checkBrackets2 = getToken(editor, frontStr2);
-            console.log('checkBrackets2',checkBrackets2);
+            
             if(checkBrackets2.string === '[' && checkBrackets2.end-checkBrackets2.start === 1){
                 list  = getCompletions(token, keywords, options)
             }
@@ -106,18 +103,10 @@
         {
           found.push(str);
         }   // 確認keywords裡面是否有符合使用者輸入的內容，有的話就塞進found array中以顯示在畫面上 但是不能包含沒有"[["的空字串，不然他會顯示。 
-        console.log(found);
+        
       }
-      
-      
-        console.log('options ,options.useGlobalScope',options, options.useGlobalScope);
-        if (!options || options.useGlobalScope !== false)
-        // gatherCompletions(global);
-        console.log(keywords);
-        
         forEach(keywords, maybeAdd);
-        
-        
+
       // }
       return found;
     }

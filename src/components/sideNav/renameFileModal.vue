@@ -41,7 +41,6 @@ export default {
     const updateFile = async () => {
       if(!(inputFileName.value in store.state.serverPostListUpdated)){
         if (inputFileName.value) {
-          console.log('props.itemName ',props.itemName);
           await renamePostTitle(
             store.state.userid,
             props.itemName,
@@ -59,7 +58,6 @@ export default {
       }
     };
     const disabledButton = computed(() => {
-      console.log('disabledButton ',inputFileName.value)
         if (inputFileName.value) {
         return false;
       } else {
@@ -69,7 +67,6 @@ export default {
 
     const clearModal = () => {
       inputFileName.value = "";
-      console.log('cancel');
       visible.value = false;
     };
     watch(

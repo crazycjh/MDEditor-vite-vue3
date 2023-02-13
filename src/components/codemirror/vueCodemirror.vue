@@ -92,7 +92,6 @@ export default ({
     
     
     watch(()=>[store.state.serverDataUpdated,store.state.choseFileName],()=>{
-      console.log('watch server data ',store.state.serverDataUpdated)
       if(editor){
         editor.setValue((store.state.serverDataUpdated));
       }
@@ -102,7 +101,6 @@ export default ({
     
     onMounted(async() => {
       // editor = CodeMirror.fromTextArea(codeEditor.value, {
-        console.log('edit onMounted')
         editor = CodeMirror.fromTextArea(document.getElementById('codemirrortext'), {  
         value: modelValue.value,
         mime: "text/html",
@@ -123,7 +121,6 @@ export default ({
         },
       });
       // 监听编辑器的change事件
-      console.log(window.screen.height);
       store.commit('assignEditorInstance',editor);
       editor.setSize('auto',(window.innerHeight*0.95)+'px')
       editor.setOption('hintOptions',{completeSingle: false, keyword: ['[[test','string','123','abc']})
@@ -141,7 +138,7 @@ export default ({
       //   console.log(" getSelections ", editor.getSelections());
         
       // })
-      console.log("read data in onmounted");
+
 
       
 
