@@ -10,7 +10,7 @@
           <img
             src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
             class="w-full"
-            alt="Sample image"
+            alt="login"
           />
         </div>
         <div class="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
@@ -152,19 +152,17 @@
 <script>
 import { ref, computed } from "vue";
 import { login } from "../FirebaseFunc/firebase";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-
 
 export default {
   setup() {
     const store = useStore();
 
-    const emailaddress = ref('aaa@bbbb.com');
+    const emailaddress = ref("aaa@bbbb.com");
     const pwd = ref("123456");
 
     const router = useRouter();
-    
 
     // valid the entered email
 
@@ -194,9 +192,11 @@ export default {
       // signInWithEmailAndPassword(auth, 'aaa@bbbb.com', '123456')
       //login with email and password aaa@bbbb.com
       const userCredential = await login(emailaddress.value, pwd.value);
-      store.commit("setLoginState",{login:true,uid:userCredential.user.uid})
+      store.commit("setLoginState", {
+        login: true,
+        uid: userCredential.user.uid,
+      });
       router.push({ path: "/editor" });
-      
     };
     // Initialize Firebase
 

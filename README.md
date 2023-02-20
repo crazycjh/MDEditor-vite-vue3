@@ -27,10 +27,10 @@ I made it by modify the Codemirror hint function and add a new one markdown rule
 
 
 ### Notice
-there is a showHint code for the codemirror named javacripte-hint.js in the root diretory.
-You can put the file to node_modules/codemirror/hint/ to replace the original one.
+there is a showHint code  for the codemirror named my-hint.js in the root diretory.
+You can put the file to node_modules/codemirror/hint/ .
 Then you will get a document list hint function.
-I am looking for the method the add the function as nomal way.
+
 
 中文簡介：
 
@@ -39,5 +39,7 @@ I am looking for the method the add the function as nomal way.
 2.使用Codemirror version5作為編輯器，Markdown編譯引擎選擇”Marked”。在codemirror編輯器輸入文字同時會把文字透過marked API轉換成對應的HTML code並顯示在畫面右邊。
 
 3.新增功能：藉由修改codemirror裡面的showHint功能，把此功能改成當前流行的MD軟體(obsidian)裡面的”文章連結”，當在編輯器輸入兩個中括號 “ [[ ]] “，隨後會跳出一個下拉式選單供選擇，而這個下拉式選單的內容會是文章列表中其他的文章。在右側HTML code的部分會顯示可點擊的連結，點擊後會直接跳轉至對應的文章。
+把root資料假下面的my-hint.js 複製到 node_modules/codemirror/hint/
 
 4.可透過編輯器上方按鈕插入markdown語法，也可框選文字後插入語法。
+

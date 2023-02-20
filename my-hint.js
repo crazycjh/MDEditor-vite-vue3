@@ -33,13 +33,12 @@
       // Find the token at the cursor
       let list = [];
       var cur = editor.getCursor(), token = getToken(editor, cur);
-      
       if (!/^[\w$_]*$/.test(token.string)) { //檢查是不是符合英文、數字以及 $ _ 這些字元，如果不是就進來，並且把string清空
-        
         token = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                  type: token.string == "." ? "property" : null};
         
       } else if (token.end > cur.ch) {
+        //exception error
         token.end = cur.ch;
         token.string = token.string.slice(0, cur.ch - token.start);
       }
@@ -78,16 +77,15 @@
               to: Pos(cur.line, token.end)};
     }
     
-    function javascriptHint(editor, options) {
-      
-      
+    function myHint(editor, options) {
       return scriptHint(editor, options.keyword,
         function (e, cur) {
             return e.getTokenAt(cur);
         },
         options);
     };
-    CodeMirror.registerHelper("hint", "javascript",javascriptHint);
+    
+    CodeMirror.registerHelper("hint", "myHint",myHint);
     
     
   

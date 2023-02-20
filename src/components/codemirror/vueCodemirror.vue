@@ -38,7 +38,7 @@ import "codemirror/addon/search/search.js";
 
 
 
-import "codemirror/addon/hint/javascript-hint.js"
+import "codemirror/addon/hint/my-hint.js"
 import "codemirror/addon/hint/show-hint.js"
 import "codemirror/addon/hint/show-hint.css"
 
@@ -87,6 +87,7 @@ export default ({
       if(index > -1){
         postList.splice(index,1);
       }
+      //set hint list
       editor.setOption('hintOptions',{completeSingle: false, keyword: postList})
     })
     
@@ -118,6 +119,7 @@ export default ({
         // direction:"rtl"
         hintOptions: {
           completeSingle: false,
+          
         },
       });
       // 监听编辑器的change事件
@@ -129,7 +131,8 @@ export default ({
         context.emit("update:modelValue", editor.doc.getValue());
       });
       editor.on('cursorActivity',()=>{
-        editor.showHint();
+        CodeMirror.showHint(editor, CodeMirror.hint.myHint);
+        // editor.showHint();
         // editor.replaceSelection('test_string')
       })
 
